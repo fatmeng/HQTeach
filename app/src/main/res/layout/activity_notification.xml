@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_notification"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chris.hqteach.notification.NotificationActivity">
+
+    <ImageView
+        android:id="@+id/notification_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.dalong.marqueeview.MarqueeView
+        android:id="@+id/marquee_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:direction="left"
+        app:isRepeat="true"
+        android:background="@color/colorBlackTraslucent"
+        app:speed="50"
+        app:startPoint="end"
+        app:textSize="20sp"
+        app:textcolor="@android:color/holo_red_light"/>
+</FrameLayout>
