@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,12 +13,14 @@ import android.webkit.WebViewClient;
 import com.chris.hqteach.BaseActivity;
 import com.chris.hqteach.R;
 import com.chris.hqteach.utils.SPUtils;
+import com.chris.hqteach.utils.SystemUtils;
+import com.orhanobut.logger.Logger;
 
 public class WebViewActivity extends BaseActivity {
 
 
     public static final String WEB_URL = "web_url";
-
+    String mac = "";
     WebView mWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +31,10 @@ public class WebViewActivity extends BaseActivity {
             url = SPUtils.getInstance(this).getLastUrl();
         }
         initView(url);
+        mac = SystemUtils.getMac(this);
     }
+
+
 
 
     private void initView(String url){
@@ -38,6 +44,19 @@ public class WebViewActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                StringBuilder sb = new StringBuilder(url);
+
+                if (url.contains("ecbIndex")){
+                    sb = url.contains("?")?sb.append("&addresss=" + mac):sb.append("?address="+mac);
+                    url = sb.toString();
+                }
+                Logger.d("发到服务器的url:" + url);
+                return super.shouldInterceptRequest(view, url);
+
             }
         });
         final WebSettings settings = mWebView.getSettings();

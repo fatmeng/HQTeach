@@ -49,12 +49,7 @@ public class HQService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //当HQService存活时,再次调起,此方法会再次调用.之前的onCreate. onStart不会被调用
 
-        //如果应用未在前台,则将其放至前台
-        if(!isTopApp()){
-            intent = new Intent(this, WebViewActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
+
         return START_STICKY;
     }
 
@@ -82,15 +77,18 @@ public class HQService extends Service {
         private int count = 0;
         private ConnectionManager manager;
         boolean isQuit = false;
+        Intent intent = null;
         public ConntectThread(String name, Context context) {
             super(name);
             this.mContext = context;
+            intent = new Intent(mContext, WebViewActivity.class);
             //
             manager = new ConnectionManager(mContext, new ConnectionConfig.Builder(mContext).setAddress("1.1.1.1").setPort(9988).build());
         }
 
         @Override
         public void run() {
+
            while (!isQuit){
                conn = manager.connect();
                 if (conn != null){
@@ -106,6 +104,11 @@ public class HQService extends Service {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+               //如果应用未在前台,则将其放至前台
+               if(!isTopApp()){
+                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                   startActivity(intent);
+               }
             }
         }
     }
